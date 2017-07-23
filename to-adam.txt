@@ -1,0 +1,78 @@
+type mpu:
+0_mpu6050
+1_mpu6500
+// mpu6050 
+
+*gyro sensibilité:
+
+0_ sensitivity : 131; scale : 250 °/s 
+1_ sensitivity : 65.5; scale : 500 °/s 
+2_ sensitivity : 32.8; scale : 1000 °/s 
+3_ sensitivity : 16.4; scale : 2000 °/s
+
+*accel sensibilité:
+
+0_ sensitivity : 16384; scale : 2g 
+1_ sensitivity : 8192; scale : 4g 
+2_ sensitivity : 4096; scale : 8g 
+3_ sensitivity : 2048; scale : 16g 
+
+*gyro et accel filtre:
+
+0_ accel bandwidth : 260Hz; gyro bandwidth : 256Hz
+1_ accel bandwidth : 184Hz; gyro bandwidth : 188Hz
+2_ accel bandwidth : 94Hz; gyro bandwidth : 98Hz
+3_ accel bandwidth : 44Hz; gyro bandwidth : 42Hz
+4_ accel bandwidth : 21Hz; gyro bandwidth : 20Hz
+5_ accel bandwidth : 10Hz; gyro bandwidth : 10Hz
+6_ accel bandwidth : 5Hz; gyro bandwidth : 5Hz
+
+//mpu6500
+
+*gyro sensibilité:
+
+0_ sensitivity : 131; scale : 250 °/s 
+1_ sensitivity : 65.5; scale : 500 °/s 
+2_ sensitivity : 32.8; scale : 1000 °/s 
+3_ sensitivity : 16.4; scale : 2000 °/s 
+
+*accel sensibilité:
+
+0_ sensitivity : 16384; scale : 2g 
+1_ sensitivity : 8192; scale : 4g 
+2_ sensitivity : 4096; scale : 8g 
+3_ sensitivity : 2048; scale : 16g 
+
+*gyro filtre:
+
+0_ bandwidth : 8800Hz; Fs:32kHz
+1_ bandwidth : 3600Hz; Fs:32kHz
+2_ bandwidth : 250Hz; Fs : 8kHz 
+3_ bandwidth : 184Hz; Fs : 1kHz 
+4_ bandwidth : 92Hz; Fs : 1kHz 
+5_ bandwidth : 41Hz; Fs : 1kHz 
+6_ bandwidth : 20; Fs : 1kHz 
+7_ bandwidth : 10Hz; Fs : 1kHz 
+8_ bandwidth : 5Hz; Fs : 1kHz 
+9_ bandwidth : 3600Hz; Fs : 8kHz 
+
+*accel filtre:
+
+0_ bandwidth : 1130Hz
+1_ bandwidth : 460Hz
+2_ bandwidth : 184Hz
+3_ bandwidth : 92Hz
+4_ bandwidth : 41Hz
+5_ bandwidth : 20Hz
+6_ bandwidth : 10Hz
+7_ bandwidth : 5Hz
+
+*calibration:
+0_yes
+1_no
+
+*filtre calman:
+
+0_yes
+1_no
+
