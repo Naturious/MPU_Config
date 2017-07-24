@@ -26,21 +26,8 @@ void setup() {
   Wire.write(0x6B);                                                          //We want to write to the PWR_MGMT_1 register (6B hex)
   Wire.write(0x00);                                                          //Set the register bits as 00000000 to activate the gyro
   Wire.endTransmission();                                                    //End the transmission with the gyro.
-//  byte condition=0;
-//  byte code;
-//  do{
-//      if(Serial.available()){
-//        if((Serial.read() == 6) && (Serial.read() == 7) && (Serial.read() == 8))
-//          break;
-////        code=code_ins;
-//////        Serial.println(code);
-////        if((code == 6)&&(condition==0)) {condition=1;}
-////        else if((code==7)&&(condition==1)){condition=2;}
-////        else if((code==8)&&(condition==2)){condition=3;}
-////        else {condition=0;}
-////        Serial.println(condition);
-//      }
-//  }while(1);
+
+
   while(Serial.available())Serial.read();
   led_blink ();
 //  Serial.write(0x06);  Serial.write(0x07);  Serial.write(0x08);
@@ -223,15 +210,6 @@ void read_from_serial(){
     
   }
 }
-//void read_from_serial(){
-//    String ch;
-//    if(Serial.available()){
-//      ch=Serial.readString();
-//      int i=ch.indexOf(' ');
-//      code_ins=ch.substring(0,i).toInt();
-//      parameter=ch.substring(i+1,ch.length()).toInt();
-//    }
-//}
 
 void print_values(){
   Serial.println(gyro_roll);
