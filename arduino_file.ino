@@ -56,7 +56,7 @@ void read_values(){
 	Wire.endTransmission();                                      //End the transmission
 	Wire.requestFrom(0x68, 14);
 	while(Wire.available() < 14);                                 //Wait until the 6 bytes are received
-	
+
 	read_acc_value_from_i2c(accel_x);
 	read_acc_value_from_i2c(accel_y);
 	read_acc_value_from_i2c(accel_z);
@@ -98,95 +98,95 @@ void get_inst(){
 				gyro_sensitivity=gyro_sensitivity/2;
 			}  
 			gyro_scale=gyro_scale*8;
-	Wire.beginTransmission(gyro_address);                                      //Start communication with the address found during search.
-	Wire.write(0x1B);                                                          //We want to write to the GYRO_CONFIG register (1B hex)
-	Wire.write(gyro_scale);                                                    //choosing the gyro scale + set FCHOICE_B for mpu6500
-	Wire.endTransmission();                                                    //End the transmission with the gyro
-	};
-	if(code_ins==3){
-		accel_scale=parameter;
-		accel_sensitivity=16384;
-		for (int i = 0; i < accel_scale; ++i)
-		{
-			accel_sensitivity=accel_sensitivity/2;
-		}  
-		accel_scale=accel_scale*8;
-	Wire.beginTransmission(gyro_address);                                      //Start communication with the address found during search.
-	Wire.write(0x1C);                                                          //We want to write to the ACCEL_CONFIG register (1A hex)
-	Wire.write(accel_scale);                                                          //Set the register bits as 00010000 (+/- 8g full scale range)
-	Wire.endTransmission();                                                    //End the transmission with the gyro
-	};
-	if(code_ins==4){
-		if(gyro_type==0){
-			mpu_filter=parameter;
-		}
-		if(gyro_type==1){
-	//reset here the GYRO_CONFIG register (1B hex) to choose FCHOICE_B value 
-			if(parameter==0)gyro_scale |= 1 ;
-			if(parameter==1)gyro_scale |= 2 ;
-			if(parameter==2)mpu_filter = 0 ;
-			if(parameter==3)mpu_filter = 1 ;
-			if(parameter==4)mpu_filter = 2 ;
-			if(parameter==5)mpu_filter = 3 ;
-			if(parameter==6)mpu_filter = 4 ;
-			if(parameter==7)mpu_filter = 5 ;
-			if(parameter==8)mpu_filter = 6 ;
-			if(parameter==9)mpu_filter = 7 ;
 			Wire.beginTransmission(gyro_address);                                      //Start communication with the address found during search.
 			Wire.write(0x1B);                                                          //We want to write to the GYRO_CONFIG register (1B hex)
 			Wire.write(gyro_scale);                                                    //choosing the gyro scale + set FCHOICE_B for mpu6500
 			Wire.endTransmission();                                                    //End the transmission with the gyro
+		};
+		if(code_ins==3){
+			accel_scale=parameter;
+			accel_sensitivity=16384;
+			for (int i = 0; i < accel_scale; ++i)
+			{
+				accel_sensitivity=accel_sensitivity/2;
+			}  
+			accel_scale=accel_scale*8;
+			Wire.beginTransmission(gyro_address);                                      //Start communication with the address found during search.
+			Wire.write(0x1C);                                                          //We want to write to the ACCEL_CONFIG register (1A hex)
+			Wire.write(accel_scale);                                                          //Set the register bits as 00010000 (+/- 8g full scale range)
+			Wire.endTransmission();                                                    //End the transmission with the gyro
+		};
+		if(code_ins==4){
+			if(gyro_type==0){
+				mpu_filter=parameter;
+			}
+			if(gyro_type==1){
+			//reset here the GYRO_CONFIG register (1B hex) to choose FCHOICE_B value 
+				if(parameter==0)gyro_scale |= 1 ;
+				if(parameter==1)gyro_scale |= 2 ;
+				if(parameter==2)mpu_filter = 0 ;
+				if(parameter==3)mpu_filter = 1 ;
+				if(parameter==4)mpu_filter = 2 ;
+				if(parameter==5)mpu_filter = 3 ;
+				if(parameter==6)mpu_filter = 4 ;
+				if(parameter==7)mpu_filter = 5 ;
+				if(parameter==8)mpu_filter = 6 ;
+				if(parameter==9)mpu_filter = 7 ;
+				Wire.beginTransmission(gyro_address);                                      //Start communication with the address found during search.
+				Wire.write(0x1B);                                                          //We want to write to the GYRO_CONFIG register (1B hex)
+				Wire.write(gyro_scale);                                                    //choosing the gyro scale + set FCHOICE_B for mpu6500
+				Wire.endTransmission();                                                    //End the transmission with the gyro
+			}
+			Wire.beginTransmission(gyro_address);                                //Start communication with the address found during search
+			Wire.write(0x1A);                                            //We want to write to the CONFIG register (1A hex)
+			Wire.write(mpu_filter);                                            //Set the register bits as 00000011 (set filter with with 10Hz bandwidth and 17ms delay)
+			Wire.endTransmission();                                      //End the transmission with the gyro    
+		};
+		if(code_ins==5){
+			if(gyro_type==1)
+			{
+				if(parameter==0)accel_filter = 8 ;
+				if(parameter==1)accel_filter = 0 ;
+				if(parameter==2)accel_filter = 1 ;
+				if(parameter==3)accel_filter = 2 ;
+				if(parameter==4)accel_filter = 3 ;
+				if(parameter==5)accel_filter = 4 ;
+				if(parameter==6)accel_filter = 5 ;
+				if(parameter==7)accel_filter = 6 ;
+			}
+			Wire.beginTransmission(gyro_address);                                //Start communication with the address found during search
+			Wire.write(0x1D);                                            //We want to write to the ACCEL_CONFIG_2 register (1A hex)
+			Wire.write(accel_filter);                                            //Set the register bits as 00000011 (set filter with with 10Hz bandwidth and 17ms delay)
+			Wire.endTransmission();                                      //End the transmission with the gyro    
 		}
-		Wire.beginTransmission(gyro_address);                                //Start communication with the address found during search
-		Wire.write(0x1A);                                            //We want to write to the CONFIG register (1A hex)
-		Wire.write(mpu_filter);                                            //Set the register bits as 00000011 (set filter with with 10Hz bandwidth and 17ms delay)
-		Wire.endTransmission();                                      //End the transmission with the gyro    
-	};
-	if(code_ins==5){
-		if(gyro_type==1)
-		{
-			if(parameter==0)accel_filter = 8 ;
-			if(parameter==1)accel_filter = 0 ;
-			if(parameter==2)accel_filter = 1 ;
-			if(parameter==3)accel_filter = 2 ;
-			if(parameter==4)accel_filter = 3 ;
-			if(parameter==5)accel_filter = 4 ;
-			if(parameter==6)accel_filter = 5 ;
-			if(parameter==7)accel_filter = 6 ;
-		}
-		Wire.beginTransmission(gyro_address);                                //Start communication with the address found during search
-		Wire.write(0x1D);                                            //We want to write to the ACCEL_CONFIG_2 register (1A hex)
-		Wire.write(accel_filter);                                            //Set the register bits as 00000011 (set filter with with 10Hz bandwidth and 17ms delay)
-		Wire.endTransmission();                                      //End the transmission with the gyro    
-	}
-	if(code_ins==6){
-		for (cal_int = 0; cal_int < 2000 ; cal_int ++){    //Take 2000 readings for calibration
-			read_values();
-			gyro_roll_cal += gyro_roll;                        //Ad roll value to gyro_roll_cal.
-			gyro_pitch_cal += gyro_pitch;                        //Ad pitch value to gyro_pitch_cal.
-			gyro_yaw_cal += gyro_yaw;                        //Ad yaw value to gyro_yaw_cal
-			//if(cal_int % 15 == 0)digitalWrite(9, !digitalRead(9));
-			delay(4);
-			if(cal_int % 20== 0)Serial.write(0x2E);
-		}
-		//Now that we have 2000 measures, we need to devide by 2000 to get the average gyro offset
-		gyro_pitch_cal /= 2000;                                                         //Divide the roll total by 2000.
-		gyro_roll_cal /= 2000;                                                         //Divide the pitch total by 2000.
-		gyro_yaw_cal /= 2000; 
-	};
-	if(code_ins==7){
-		if(parameter==101){kalman_filter_activated=false;}
-		else if (parameter>=0 && parameter<= 100) {
-			kalman_filter_activated=true ;kalman_filter_coeff=parameter/100;
-		}
-	};
-	if(code_ins==15){
-		calcul_permitted=true;
-	};
-	if(code_ins==16){
-		calcul_permitted=false;
-	};
-	code_ins=0;
+		if(code_ins==6){
+			for (cal_int = 0; cal_int < 2000 ; cal_int ++){    //Take 2000 readings for calibration
+				read_values();
+				gyro_roll_cal += gyro_roll;                        //Ad roll value to gyro_roll_cal.
+				gyro_pitch_cal += gyro_pitch;                        //Ad pitch value to gyro_pitch_cal.
+				gyro_yaw_cal += gyro_yaw;                        //Ad yaw value to gyro_yaw_cal
+				//if(cal_int % 15 == 0)digitalWrite(9, !digitalRead(9));
+				delay(4);
+				if(cal_int % 20== 0)Serial.write(0x2E);
+			}
+			//Now that we have 2000 measures, we need to devide by 2000 to get the average gyro offset
+			gyro_pitch_cal /= 2000;                                                         //Divide the roll total by 2000.
+			gyro_roll_cal /= 2000;                                                         //Divide the pitch total by 2000.
+			gyro_yaw_cal /= 2000; 
+		};
+		if(code_ins==7){
+			if(parameter==101){kalman_filter_activated=false;}
+			else if (parameter>=0 && parameter<= 100) {
+				kalman_filter_activated=true ;kalman_filter_coeff=parameter/100;
+			}
+		};
+		if(code_ins==15){
+			calcul_permitted=true;
+		};
+		if(code_ins==16){
+			calcul_permitted=false;
+		};
+		code_ins=0;
 	}
 }
 
