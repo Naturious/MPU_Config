@@ -1,5 +1,7 @@
 #include <Wire.h>
+
 const int LED_PIN =12;
+
 byte gyro_address,gyro_scale=0,mpu_filter,accel_scale=0,accel_filter;
 double gyro_sensitivity=131,accel_sensitivity=16384;
 int cal_int;
@@ -9,7 +11,6 @@ double gyro_roll_cal,gyro_pitch_cal,gyro_yaw_cal;
 double temp_variable;
 double gyro_roll,gyro_pitch,gyro_yaw;
 double accel_x,accel_y,accel_z;
-double temp;
 float kalman_filter_coeff=0.7;
 
 bool kalman_filter_activated=false;
@@ -36,17 +37,17 @@ void loop(){
 	if(calcul_permitted){
 		timer = micros();
 		read_values();
-    //appliying sensitivities
-		accel_x/=accel_sensitivity;
-		accel_y/=accel_sensitivity;
-		accel_z/=accel_sensitivity;
-
-		gyro_roll/=gyro_sensitivity;
-		gyro_pitch/=gyro_sensitivity;
-		gyro_yaw/=gyro_sensitivity;
+		apply_sensitivites();
 		print_values();
 		while (micros()-timer <50000);
 	}
+}
+
+void read_acc_value_from_i2c(int &val)
+{
+	temp_variable = ((Wire.read()<<8)|Wire.read());
+	if(!kalman_filter_activated){val=temp_variable;}
+	else val=val*kalman_filter_coeff+temp_variable*(1-kalman_filter_coeff);
 }
 
 void read_values(){
@@ -55,16 +56,14 @@ void read_values(){
 	Wire.endTransmission();                                      //End the transmission
 	Wire.requestFrom(0x68, 14);
 	while(Wire.available() < 14);                                 //Wait until the 6 bytes are received
-	temp_variable = ((Wire.read()<<8)|Wire.read());                         //Multiply highByte by 256 (shift left by 8) and ad lowByte
-	if(!kalman_filter_activated){accel_x=temp_variable;}
-	else accel_x=accel_x*kalman_filter_coeff+temp_variable*(1-kalman_filter_coeff);
-	temp_variable = ((Wire.read()<<8)|Wire.read());                         //Multiply highByte by 256 (shift left by 8) and ad lowByte
-	if(!kalman_filter_activated){accel_y=temp_variable;}
-	else accel_y=accel_y*kalman_filter_coeff+temp_variable*(1-kalman_filter_coeff);
-	temp_variable = ((Wire.read()<<8)|Wire.read());                         //Multiply highByte by 256 (shift left by 8) and ad lowByte
-	if(!kalman_filter_activated){accel_z=temp_variable;}
-	else accel_z=accel_z*kalman_filter_coeff+temp_variable*(1-kalman_filter_coeff);
-	temp= ((Wire.read()<<8)|Wire.read());
+	
+	read_acc_value_from_i2c(accel_x);
+	read_acc_value_from_i2c(accel_y);
+	read_acc_value_from_i2c(accel_z);
+
+	Wire.read();Wire.read(); //Skip two bytes
+
+	//Still need to clean Gyro code
 
 	temp_variable = ((Wire.read()<<8)|Wire.read());                         //Multiply highByte by 256 (shift left by 8) and ad lowByte
 	if(cal_int == 2000)temp_variable -= gyro_roll_cal;               //Only compensate after the calibration
@@ -201,6 +200,16 @@ void read_from_serial(){
 	}
 }
 
+void apply_sensitivites()
+{
+	accel_x/=accel_sensitivity;
+	accel_y/=accel_sensitivity;
+	accel_z/=accel_sensitivity;
+
+	gyro_roll/=gyro_sensitivity;
+	gyro_pitch/=gyro_sensitivity;
+	gyro_yaw/=gyro_sensitivity;
+}
 void print_values(){
 	Serial.println(gyro_roll);
 }
